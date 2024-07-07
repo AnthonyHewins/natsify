@@ -1,0 +1,9 @@
+[Unit]
+Description=Publishes NTFY messages it receives from NATS
+
+[Service]
+Type=simple
+ExecStart=/home/%u/.local/bin/err-pub
+
+[Install]
+WantedBy=default.target
