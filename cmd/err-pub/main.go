@@ -41,7 +41,7 @@ func newApp() (*app, error) {
 	flag.StringVar(&c.ntfyURL, "ntfy-url", "http://localhost:32016", "Override the default NTFY url")
 	flag.DurationVar(&c.ntfyTimeout, "ntfy-timeout", time.Second*5, "How long before sending a NTFY message will time out")
 
-	flag.StringVar(&c.natsTopic, "nats-topic", "", "What topic to listen to; required")
+	flag.StringVar(&c.natsTopic, "nats-topic", "errors", "What topic to listen to")
 	flag.StringVar(&c.natsURL, "nats-url", "nats://127.0.0.1:4222", "Override the default NATS url")
 	flag.DurationVar(&c.natsTimeout, "nats-timeout", time.Second*2, "Override the default dial timeout on NATS")
 	flag.IntVar(&c.natsMaxReconnects, "nats-max-reconnects", 60, "Override the max number of reconnect attempts. If negative, it will never stop trying to reconnect; defaults to 60")
