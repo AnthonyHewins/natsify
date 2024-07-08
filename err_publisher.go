@@ -40,7 +40,7 @@ func (e *ErrPublisher) Push(ctx context.Context, err error) error {
 
 	msg := gotfy.Message{
 		Topic:   e.topic,
-		Title:   e.appName,
+		Title:   e.appName + " error",
 		Message: strings.Join(text, "\n"),
 		Tags:    []string{gotfy.Red_circle},
 	}

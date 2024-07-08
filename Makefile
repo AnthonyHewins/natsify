@@ -13,11 +13,11 @@ $(targets): ## Build a target server binary
 deploy: $(targets) ## Deploy all binaries
 	mv bin/* $(HOME)/.local/bin
 	cp -r systemd/* $(HOME)/.config/systemd/user
-	$(sys) stop $(services)
-	$(sys) disable $(services)
+	$(sys) stop $(targets)
+	$(sys) disable $(targets)
 	$(sys) daemon-reload
-	$(sys) enable $(services)
-	$(sys) start $(services)	
+	$(sys) enable $(targets)
+	$(sys) start $(targets)	
 
 help: ## Print help
 	@printf "\033[36m%-30s\033[0m %s\n" "(target)" "Build a target binary in current arch for running locally: $(targets)"
