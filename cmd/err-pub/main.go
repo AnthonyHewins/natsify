@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -69,11 +70,7 @@ func newApp() (*app, error) {
 		return nil, err
 	}
 
-	return &app{
-		ns:        ns,
-		publisher: publisher,
-		logger:    logger,
-	}, nil
+	return &app{ns: ns, publisher: publisher, logger: logger}, nil
 }
 
 func main() {
@@ -84,7 +81,10 @@ func main() {
 
 	for {
 		msg, err := a.read(context.Background())
-		if err != nil {
+		switch {
+		case errors.Is(err, &clientErr{}):
+			continue
+		case err != nil:
 			panic(err)
 		}
 

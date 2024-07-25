@@ -15,6 +15,8 @@ type app struct {
 	logger    *slog.Logger
 }
 
+var errNoTopic = &clientErr{s: "empty topic passed"}
+
 func (a *app) read(ctx context.Context) (*gotfy.Message, error) {
 	msg, err := a.ns.NextMsgWithContext(ctx)
 	if err != nil {
@@ -24,8 +26,15 @@ func (a *app) read(ctx context.Context) (*gotfy.Message, error) {
 
 	var x gotfy.Message
 	if err := json.Unmarshal(msg.Data, &x); err != nil {
-		a.logger.ErrorContext(ctx, "failed reading message", "err", err)
+		a.logger.ErrorContext(ctx, "failed reading message", "err", err, "bytes", string(msg.Data))
 		return nil, err
+	}
+
+	l := a.logger.With("msg", x)
+
+	if x.Topic == "" {
+		l.ErrorContext(ctx, "invalid topic passed: empty string")
+		return nil, errNoTopic
 	}
 
 	return &x, nil
