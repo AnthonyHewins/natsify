@@ -10,10 +10,10 @@ deem important
 
 ## Quickly run
 
-To compile, `make err-pub`. You can use flags or the equivalent `UPPER_SNAKE` of the below flags
+To compile, `make natsify`. You can use flags or the equivalent `UPPER_SNAKE` of the below flags
 
 ```
-Usage of err-pub:
+Usage of natsify:
   -app-name="": Application name to include in all logs. Blank to exclude
   -log-exporter="": File to log to. Blank for stdout
   -log-format="json": Log format to use: json | logfmt
@@ -21,7 +21,7 @@ Usage of err-pub:
   -log-src=false: Whether to include the line of source code that caused the log in the message
   -nats-max-reconnects=60: Override the max number of reconnect attempts. If negative, it will never stop trying to reconnect; defaults to 60
   -nats-timeout=2s: Override the default dial timeout on NATS
-  -nats-topic="": What topic to listen to; required
+  -nats-topic="natsify": What topic to listen to
   -nats-url="nats://127.0.0.1:4222": Override the default NATS url
   -ntfy-timeout=5s: How long before sending a NTFY message will time out
   -ntfy-url="http://localhost:32016": Override the default NTFY url

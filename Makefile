@@ -1,7 +1,7 @@
 .DEFAULT: err-pub
 .PHONY: fmt test gen clean run help sql
 
-targets := err-pub
+targets := natsify
 
 sys := systemctl --user
 
