@@ -39,6 +39,7 @@ type app struct {
 	nc        *nats.Conn
 	publisher *gotfy.Publisher
 	logger    *slog.Logger
+	timeout   time.Duration
 }
 
 func main() {
@@ -50,17 +51,30 @@ func main() {
 		a.nc.Close()
 	}()
 
-	a.nc.Subscribe(a.subject, func(msg *nats.Msg) {
-		x, err := a.read(context.Background(), msg)
-		switch {
-		case err != nil:
+	pipe := make(chan *nats.Msg)
+	sub, err := a.nc.ChanSubscribe(a.subject, pipe)
+	if err != nil {
+		a.logger.Error("failed subscription", "err", err)
+		panic(err)
+	}
+	defer func() {
+		for _, v := range []error{sub.Drain(), sub.Unsubscribe()} {
+			a.logger.Error("failed drain/unsub", "err", v)
+		}
+		close(pipe)
+	}()
+
+	for msg := range pipe {
+		ctx, cancel := context.WithTimeout(context.Background(), a.timeout)
+		defer cancel()
+
+		x, err := a.read(ctx, msg)
+		if err != nil {
 			return
 		}
 
-		if err = a.publish(context.Background(), x); err != nil {
-			panic(err)
-		}
-	})
+		a.publish(context.Background(), x)
+	}
 }
 
 func newApp() (*app, error) {
@@ -102,6 +116,7 @@ func newApp() (*app, error) {
 		nc:        nc,
 		publisher: publisher,
 		logger:    logger,
+		timeout:   c.natsTimeout,
 	}, nil
 }
 

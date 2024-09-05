@@ -1,11 +1,9 @@
-.DEFAULT: err-pub
-.PHONY: fmt test gen clean run help sql
+.DEFAULT: natsify
+.PHONY: help deploy
 
 targets := natsify
 
 sys := systemctl --user
-
-VERSION ?= v0.0.0
 
 $(targets): ## Build a target server binary
 	go build -o bin/$@ ./cmd/$@
